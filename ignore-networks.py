@@ -5,21 +5,17 @@ import re
 import io
 import math
 import sys
+import argparse
 import itertools
 
-#these are passed to re.compile
-ignore_patterns = ('USAISC', 'DoD', r'\bNASA', 'National Aeronautics', '754th', 'Navy Network Information Center', 'DARPA', r'\bUSDA', '^State of ', '(?i)university', '(?i)host', '(?i)research', '(?i)academ(y|ic)', '(?i)institute', '(?i)education')
+from runpy import run_path  
+from util import *
 
-dbfile = sys.argv[1]
-outfile = sys.argv[2]
-infiles = sys.argv[3:]
-
-#ranges we print are inclusive
 
 min_ignore = 1 << 14
 max_good_ignore = 256
 min_gap_ignore = 1 << 17
-force_cidr_output = False #set to True for ZMap
+force_cidr_output = True #set to True for ZMap
 
 ## options for debug output from this script
 
@@ -30,74 +26,27 @@ print_gaps_min = 1 << 17
 print_small = 1024
 print_small_size = 4 
 
+
 ####   ####   ####
 ####   ####   ####
-####   ####   ####
+####   ####   ####     
 
-def ip2long(ip):
-  packedIP = socket.inet_aton(ip)
-  return struct.unpack("!L", packedIP)[0]
+parser = argparse.ArgumentParser()
+parser.add_argument('dbfile',  help='CSV file containing IP to ASN mappings')
+parser.add_argument('outfile', help='Output file')
+parser.add_argument('infile', nargs='*', help='Files with additional ranges to ignore')
+parser.add_argument('-c', default='config.py', help='Config file containing the "ignore_patterns" array. This defaults to "config.py"')
+args = parser.parse_args()
 
-def long2ip(l):
-  return socket.inet_ntoa(struct.pack('!L', l))
-  
-def ip_range(s):
-  if '-' in s:
-    a1, a2 = s.split('-')
-    try:
-      ret = (ip2long(a1), ip2long(a2))
-    except:
-      print(a1.encode('iso-8859-1'))
-      print('w', a2.encode('iso-8859-1'))
-      exit()
-    return ret
-  else:
-    if '/' in s:
-      addr, pl = s.split('/')
-    else:
-      addr, pl = s, 32
-      
-    addr = ip2long(addr)
-    nbits = 32-int(pl)
-    mask = (1 << nbits) -1
-    addr |= mask
-   
-    return (addr ^ mask, addr)
-        
-def range_to_cidrs(start, end):
-  last_addr = caddr = start
-  
-  ret = []
-  
-  while True:
-    cplen = 32
-    
-    while True:
-      cplen -= 1
-      
-      test_bit = 1<<(31-cplen)
-      if caddr & test_bit:
-        break
-        
-      new_last = caddr | ((test_bit<<1)-1)
-      
-      if cplen == -1 or new_last > end:
-        break
-      else:
-        last_addr = new_last  
-      
-    cplen += 1    
+dbfile = args.dbfile
+outfile = args.outfile
+infiles = args.infile
+cfgfile = args.c
 
-    ret.append((caddr, cplen))
-    last_addr = caddr = last_addr+1
-    
-    if caddr > end:
-      break
-    
-  return ret
+cfgdict = run_path(cfgfile)
+ignore_patterns = cfgdict['ignore_patterns']
+ignore_pattern_groups = cfgdict.get('ignore_pattern_groups', [])
   
-def cidr_to_str(cidr):
-  return long2ip(cidr[0])+'/'+str(cidr[1])
 
 ##
 
@@ -108,12 +57,15 @@ total_ignored = already_ignored = gaps_size = 0
 ignored_by_us = skipped_bad = skipped_good = skipped_gaps = 0
 pattern_ignored_sum = {}
 pattern_matched_names = {}
-
+pattern_map = {}
+  
 for pat in ignore_patterns:
   pc = re.compile(pat)
+  pattern_map[pat] = pc
   pattern_ignored_sum[pc] = 0
   pattern_matched_names[pc] = set()
   to_ignore.append(pc)
+  
 
 ranges = []
 last_end = -1
@@ -291,15 +243,33 @@ print('we ignored', ignored_by_us-gaps_size, 'via patterns and', gaps_size, 'via
 print('we skipped', skipped_good, 'good addrs')
 print("didn't ignore", skipped_bad, "addrs and", skipped_gaps, "unreachable, total:", skipped_bad+skipped_gaps)
 print(len(new_ranges), 'ranges written to file')
+print('')
 
-for pat in to_ignore:
-  print(pattern_ignored_sum[pat], 'ignored by', pat)
+for pat in sorted(ignore_patterns, key=lambda x: pattern_ignored_sum[pattern_map[x]], reverse=True):
+  print(pattern_ignored_sum[pattern_map[pat]], 'ignored by "'+str(pat)+'"')
+  
+if ignore_pattern_groups:
+  print('')
+  
+  group_results = []
+  for name, patterns in ignore_pattern_groups:
+    total = 0
+  
+    for pat in patterns:
+      total += pattern_ignored_sum[pattern_map[pat]]
+  
+    group_results.append((name, total))
+  
+  for name, total in sorted(group_results, key=lambda x: x[1], reverse=True):
+    print(total, 'ignored by', name, 'group')
+
+
   
 if print_matched_names:
-  for pat in to_ignore:
+  for pat in ignore_patterns:
     print('')
-    print('Names matched by '+str(pat)+':')
-    for name in pattern_matched_names[pat]: #itertools.islice(pattern_matched_names[pat], 10):
+    print('Names matched by "'+str(pat)+'":')
+    for name in pattern_matched_names[pattern_map[pat]]: #itertools.islice(pattern_matched_names[pattern_map[pat]], 10):
       print('  ', name)
       
       
