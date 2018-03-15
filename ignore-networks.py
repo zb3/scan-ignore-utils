@@ -213,17 +213,7 @@ for infile in infiles:
       
 #main merge algorithm
 
-ignored_ranges.sort(key=lambda x: x[0])
-new_ranges = [list(ignored_ranges[0])]
-
-for r in ignored_ranges:
-  if r[0] <= new_ranges[-1][1]+1:
-  
-    if r[1] > new_ranges[-1][1]:
-       new_ranges[-1][1] = r[1]
-  else:
-    new_ranges.append(list(r))
-    
+new_ranges = merge_ranges(ignored_ranges)
 
 with open(outfile, 'w') as f:
   for start, end in new_ranges:

@@ -34,3 +34,17 @@ python3 include-networks.py [csvdbfile] [outfile] [existing include files]
 ```
 
 There are more options, but for those you will need to... read and modify the source :)
+
+### invert-ranges.py
+Operates on standard input/output and does what it's name suggests. It outputs ranges in CIDR format unless `-n` used.
+```
+$ echo '16.0.0.0/4' | python invert-ranges.py
+0.0.0.0/4
+32.0.0.0/3
+64.0.0.0/2
+128.0.0.0/1
+
+$ echo '16.0.0.0/4' | python invert-ranges.py -n
+0.0.0.0-15.255.255.255
+32.0.0.0-255.255.255.255
+```

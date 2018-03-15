@@ -65,3 +65,21 @@ def range_to_cidrs(start, end):
   
 def cidr_to_str(cidr):
   return long2ip(cidr[0])+'/'+str(cidr[1])
+  
+def merge_ranges(ranges):
+  if not ranges:
+    return []
+    
+  ranges.sort(key=lambda x: x[0])
+  new_ranges = [list(ranges[0])]
+
+  for r in ranges:
+    if r[0] <= new_ranges[-1][1]+1:
+  
+      if r[1] > new_ranges[-1][1]:
+         new_ranges[-1][1] = r[1]
+    else:
+      new_ranges.append(list(r))
+    
+  return new_ranges
+  

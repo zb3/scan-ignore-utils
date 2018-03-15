@@ -98,18 +98,7 @@ for infile in infiles:
 #merge
 print('merging...')
 
-ranges.sort(key=lambda x: x[0])
-new_ranges = [list(ranges[0])]
-
-for r in ranges:
-  if r[0] <= new_ranges[-1][1]+1:
-  
-    if r[1] > new_ranges[-1][1]:
-       new_ranges[-1][1] = r[1]
-  else:
-    new_ranges.append(list(r))
-    
-    
+new_ranges = merge_ranges(ranges)
 
 with open(outfile, 'w') as f:
   for start, end in new_ranges:
