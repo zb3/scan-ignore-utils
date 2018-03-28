@@ -16,13 +16,13 @@ cdns = ['Cloudflare', 'Incapsula', 'Akamai', 'Fastly', 'Content Delivery Network
 #some  hosting providers (kinda), websites + some classic dbs here but not devices. note "EGIHosting" doesn't like being scanned
 hosting = ['(?i)host', 'Enzu Inc', 'GoDaddy.com', 'PEG TECH INC', 'Strato AG', '(?i)unified layer', '(?i)1&1 internet']
 
-#largest ones, 
-cloud_providers = ['Digital ?Ocean', 'Google (LLC|Ireland|Switz)', 'Amazon([.]com| Data Services)', '(?i)rackspace', 
+#largest ones,
+cloud_providers = ['Digital ?Ocean', 'Google (LLC|Ireland|Switz)', 'Amazon([.]com| Data Services)', '(?i)rackspace',
                     'Microsoft', 'OVH SAS', 'SoftLayer Technologies', 'Linode, LLC', '(?i)hetzner', 'Hangzhou Alibaba Advertising']
-    
-    
-                    
-####              
+
+
+
+####
 #### ignore_patterns is only for ignore-ranges.py
 ####
 
