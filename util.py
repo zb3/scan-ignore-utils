@@ -113,3 +113,20 @@ def invert_ranges(ranges):
     new_ranges = new_ranges[:-1]
 
   return new_ranges
+
+def ranges_total(ranges):
+  total = 0
+
+  for start, end in ranges:
+    total += end - start + 1
+
+  return total
+
+def output_ranges(ranges, no_cidr=False):
+  for start, end in ranges:
+    if no_cidr:
+      yield long2ip(start)+'-'+long2ip(end)
+    else:
+      for cidr in range_to_cidrs(start, end):
+        yield cidr_to_str(cidr)
+

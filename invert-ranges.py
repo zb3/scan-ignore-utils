@@ -19,14 +19,9 @@ for line in sys.stdin:
 ranges = merge_ranges(ranges)
 new_ranges = invert_ranges(ranges)
 
-total = 0
+total = ranges_total(new_ranges)
 
-for start, end in new_ranges:
-  total += end - start + 1
+for line in output_ranges(new_ranges, no_cidr):
+  print(line)
 
-  if no_cidr:
-    print(long2ip(start)+'-'+long2ip(end))
-  else:
-    for cidr in range_to_cidrs(start, end):
-      print(cidr_to_str(cidr))
-
+print('%d output ranges' % total, file=sys.stderr)

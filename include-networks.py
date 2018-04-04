@@ -39,7 +39,6 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', line_bufferin
 
 to_include = []
 already_included = 0
-total_included = 0
 pattern_included_sum = {}
 pattern_matched_names = {}
 pattern_map = {}
@@ -94,16 +93,11 @@ for infile in infiles:
 print('merging...')
 
 new_ranges = merge_ranges(ranges)
+total_included = ranges_total(new_ranges)
 
 with open(outfile, 'w') as f:
-  for start, end in new_ranges:
-    total_included += end - start + 1
-
-    if force_cidr_output:
-      for cidr in range_to_cidrs(start, end):
-        f.write(cidr_to_str(cidr)+'\n')
-    else:
-      f.write(long2ip(start)+'-'+long2ip(end)+'\n')
+  for line in output_ranges(new_ranges, not force_cidr_output):
+    f.write(line+'\n')
 
 # Stats time!
 

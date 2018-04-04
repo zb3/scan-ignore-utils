@@ -53,7 +53,7 @@ ignore_pattern_groups = cfgdict.get('ignore_pattern_groups', [])
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', line_buffering=True)
 
 to_ignore = []
-total_ignored = already_ignored = gaps_size = 0
+already_ignored = gaps_size = 0
 ignored_by_us = skipped_bad = skipped_good = skipped_gaps = 0
 pattern_ignored_sum = {}
 pattern_matched_names = {}
@@ -209,16 +209,11 @@ for infile in infiles:
 #main merge algorithm
 
 new_ranges = merge_ranges(ignored_ranges)
+total_ignored = ranges_total(new_ranges)
 
 with open(outfile, 'w') as f:
-  for start, end in new_ranges:
-    total_ignored += end - start + 1
-
-    if force_cidr_output:
-      for cidr in range_to_cidrs(start, end):
-        f.write(cidr_to_str(cidr)+'\n')
-    else:
-      f.write(long2ip(start)+'-'+long2ip(end)+'\n')
+  for line in output_ranges(new_ranges, not force_cidr_output):
+    f.write(line+'\n')
 
 # Stats time!
 
