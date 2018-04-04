@@ -1,10 +1,12 @@
 # scan-ignore-utils
 
-This repo contains the `exclude.conf` file for `masscan` which I use as an input to `ignore-networks` tool which ignores networks based on their name.
+This repo contains the `exclude.conf` file for `masscan` which I use as an input to the `ignore-networks` tool which ignores networks based on their name.
 
 Contents of that file are arbitrary, I ignore networks I want to, but the `ignore-networks` tool is universal, because you can specify what you want to ignore.
 
 You can also take the opposite approach and use the `include-networks` tool to generate a list of hosts to include based on AS name patterns.
+
+There are more tools here, see below.
 
 ## ignore-networks
 
@@ -35,7 +37,23 @@ python3 include-networks.py [csvdbfile] [outfile] [existing include files]
 
 There are more options, but for those you will need to... read and modify the source :)
 
-### invert-ranges.py
+## country-ranges.py
+This tool can export all networks for a given (possibly negated) set of countries. To use it you **must** first obtain `GeoLite2 Country` database in CSV format. You'll need two files, one for mapping networks to country ids (`GeoLite2-Country-Blocks-IPv4.csv`), and the second mapping country ids to country codes (`GeoLite2-Country-Locations-en.csv`).
+
+```
+$ python country-ranges.py blocks_file locations_file US CA NL BR
+```
+Output is in CIDR format unless `-n` used.
+
+This tool **always** produces a whitelist. Using the output as a blacklist may not be effective, since the DB doesn't cover the whole IPv4 space. If you want to blacklist networks from a set of countries, you can negate the set using the `-b` flag:
+```
+$ python country-ranges.py -b US CN
+```
+
+The output of that command will include all networks with countries other than those specified, but it will **not** include networks with no country mapping in the DB.
+
+
+## invert-ranges.py
 Operates on standard input/output and does what it's name suggests. It outputs ranges in CIDR format unless `-n` used.
 ```
 $ echo '16.0.0.0/4' | python invert-ranges.py
