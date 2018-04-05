@@ -24,4 +24,4 @@ total = ranges_total(new_ranges)
 for line in output_ranges(new_ranges, no_cidr):
   print(line)
 
-print('%d output ranges' % total, file=sys.stderr)
+print('%d addresses in output ranges' % total, file=sys.stderr)
