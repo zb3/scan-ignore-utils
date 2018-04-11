@@ -98,6 +98,7 @@ def merge_ranges(ranges):
   return new_ranges
 
 def invert_ranges(ranges):
+  ranges.sort(key=lambda x: x[0])
   new_ranges = [[0, 2**32-1]]
 
   for s, e in ranges:
