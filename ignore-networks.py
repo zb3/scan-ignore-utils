@@ -249,6 +249,6 @@ if print_matched_names:
   for pat in ignore_patterns:
     print('')
     print('Names matched by "'+str(pat)+'":')
-    for name in pattern_matched_names[pattern_map[pat]]: #itertools.islice(pattern_matched_names[pattern_map[pat]], 10):
+    for name in sorted(pattern_matched_names[pattern_map[pat]]): #itertools.islice(pattern_matched_names[pattern_map[pat]], 10):
       print('  ', name)
 
