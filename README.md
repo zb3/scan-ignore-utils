@@ -23,17 +23,26 @@ Is just like the above except the obvious difference, but it's also much simpler
 
 **Note** however that this tool obviously can't produce high quality results if the input database contains inexact data, and this is probably the case when using `Geolite2`. More exact methods to find ranges may exist (for instance `Google`, `Amazon` and  `Microsoft` provide downloadable lists of their IP ranges)
 
+
 ## Usage....
 
-In order to use it you **must** first obtain the `GeoLite2 ASN` database in CSV format (`CIDR,ASN,AS Name`). You can obtain this file for free here: [link](http://dev.maxmind.com/geoip/geoip2/geolite2/)
+In order to use tools listed above you **must** first obtain the `GeoLite2 ASN` database in CSV format (`CIDR,ASN,AS Name`). You can obtain this file for free here: [link](http://dev.maxmind.com/geoip/geoip2/geolite2/)
 
-Then you can adjust what to ignore/include in the `config.py` file, which should contain at least `ignore_pattenrs` and `include_patterns` variables with lists of patterns that will then be passed to `re.compile`.
+Network names to ignore/include are specified in Python files (default is `config.py`) that contain `ignore_patterns` (used by `ignore-networks.py`) or/and `include_patterns` (used by `include-networks.py`) variables, specifying a list of patterns which are then passed to `re.compile`.
+
+`ignore-networks.py` always ignores unallocated ranges even if no networks specified.
 
 You can run these tools this way:
 ```
-python3 ignore-networks.py [csvdbfile] [outfile] [existing ignore files]
-python3 include-networks.py [csvdbfile] [outfile] [existing include files]
+python3 ignore-networks.py [-c configfile] csvdbfile outfile [existing ignore files]
+python3 include-networks.py [-c configfile] csvdbfile outfile [existing include files]
 ```
+
+Configs included: (oh look - a table!)
+||ignore-networks.py|include-networks.py|
+|-|-|-|
+|config.py|US Goverment, Universities/Education, NERNs, CDNs, Hosting/Cloud providers|Cloud providers|
+|config_hostcloud.py|same as above except Hosting/Cloud providers|Hosting/Cloud providers|
 
 There are more options, but for those you will need to... read and modify the source :)
 

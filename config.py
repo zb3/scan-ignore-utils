@@ -23,7 +23,7 @@ cloud_providers = ['Digital ?Ocean', 'Google (LLC|Ireland|Switz)', 'Amazon([.]co
 misc = ['^HT$']
 
 ####
-#### ignore_patterns is only for ignore-ranges.py
+#### ignore_patterns is only for ignore-networks.py
 ####
 
 #by default we ignore all of the ranges above as originally this was for devices only
@@ -34,7 +34,7 @@ ignore_patterns = gov_misc + uni_edu + nerns + cdns + hosting + cloud_providers 
 ignore_pattern_groups = [['gov + defense', gov_misc], ['universities', uni_edu], ['NERN', nerns], ['CDN', cdns], ['hosting', hosting], ['cloud', cloud_providers]]
 
 ####
-#### include_patterns is only for include-ranges.py
+#### include_patterns is only for include-networks.py
 ####
 
 include_patterns = cloud_providers
