@@ -98,7 +98,7 @@ def merge_ranges(ranges):
   return new_ranges
 
 def invert_ranges(ranges):
-  ranges.sort(key=lambda x: x[0])
+  ranges = merge_ranges(ranges)
   new_ranges = [[0, 2**32-1]]
 
   for s, e in ranges:
@@ -110,7 +110,8 @@ def invert_ranges(ranges):
       if e < 2**32-1:
         new_ranges.append([e+1, 2**32-1])
 
-  if new_ranges[-1][0] == new_ranges[-1][1]:
+  # for continuation that ends on 2**32-1
+  if new_ranges[-1][0] == new_ranges[-1][1]+1:
     new_ranges = new_ranges[:-1]
 
   return new_ranges

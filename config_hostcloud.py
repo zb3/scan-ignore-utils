@@ -5,9 +5,11 @@ from config import *
 ####
 
 ignore_patterns = gov_misc + uni_edu + nerns + cdns + misc
+ignore_pattern_groups = []
 
 ####
 #### include_patterns is only for include-networks.py
 ####
 
 include_patterns = hosting + cloud_providers
+include_pattern_groups = []
