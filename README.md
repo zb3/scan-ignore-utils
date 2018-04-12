@@ -39,10 +39,11 @@ python3 include-networks.py [-c configfile] csvdbfile outfile [existing include 
 ```
 
 Configs included: (oh look - a table!)
-||ignore-networks.py|include-networks.py|
-|-|-|-|
-|config.py|US Goverment, Universities/Education, NERNs, CDNs, Hosting/Cloud providers|Cloud providers|
-|config_hostcloud.py|same as above except Hosting/Cloud providers|Hosting/Cloud providers|
+
+|   | ignore-networks.py | include-networks.py |
+| - | - | - |
+| config.py | US Goverment, Universities/Education, NERNs, CDNs, Hosting/Cloud providers | Cloud providers | 
+| config_hostcloud.py | same as above except Hosting/Cloud providers | Hosting/Cloud providers |
 
 There are more options, but for those you will need to... read and modify the source :)
 
