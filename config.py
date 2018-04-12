@@ -1,6 +1,6 @@
 #NOTE: these ranges are passed to re.compile
 
-gov_misc = ['USAISC', 'DoD', r'\bNASA', 'National Aeronautics', '754th', 'Navy Network Information Center', 'DARPA', r'\bUSDA', '^State of ', '(?i)department', '(?i)agency', 'Shared Services Canada']
+gov_misc = ['USAISC', 'DoD', r'\bNASA', 'National Aeronautics', 'Air Force Systems', 'Navy Network Information Center', 'DARPA', r'\bUSDA', '^State of ', '(?i)department', '(?i)agency', 'Shared Services Canada', 'CSRA LLC']
 
 uni_edu = ['(?i)university', '(?i)research', '(?i)academ(y|ic)', '(?i)institute', '(?i)education', '(?i)universidad', '(?i)science', '(?i)scientific', r'(?i)college\b']
 
@@ -20,7 +20,7 @@ hosting = ['(?i)host', 'Enzu Inc', 'GoDaddy.com', 'PEG TECH INC', 'Strato AG', '
 cloud_providers = ['Digital ?Ocean', 'Google (LLC|Ireland|Switz)', 'Amazon([.]com| Data Services)', '(?i)rackspace',
                     'Microsoft', 'OVH SAS', 'SoftLayer Technologies', 'Linode, LLC', '(?i)hetzner', 'Hangzhou Alibaba Advertising']
 
-
+misc = ['^HT$']
 
 ####
 #### ignore_patterns is only for ignore-ranges.py
@@ -28,9 +28,7 @@ cloud_providers = ['Digital ?Ocean', 'Google (LLC|Ireland|Switz)', 'Amazon([.]co
 
 #by default we ignore all of the ranges above as originally this was for devices only
 
-ignore_misc = ['^HT$']
-
-ignore_patterns = gov_misc + uni_edu + nerns + cdns + hosting + cloud_providers + ignore_misc
+ignore_patterns = gov_misc + uni_edu + nerns + cdns + hosting + cloud_providers + misc
 
 #groups are optional, for statistics only
 ignore_pattern_groups = [['gov + defense', gov_misc], ['universities', uni_edu], ['NERN', nerns], ['CDN', cdns], ['hosting', hosting], ['cloud', cloud_providers]]
