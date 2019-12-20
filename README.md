@@ -76,3 +76,20 @@ $ echo '16.0.0.0/4' | python invert-ranges.py -n
 0.0.0.0-15.255.255.255
 32.0.0.0-255.255.255.255
 ```
+
+## largest-networks.py
+This tool displays AS names that have the most IPv4 addresses (with their address count). This requires the `GeoLite2 ASN` csv file to be passed as the first argument. The second argument decides how much items to display.
+```
+$ python largest-networks.py db.csv 4
+106924288 No.31,Jin-rong Street
+81752832 AT&T Services, Inc.
+71822336 Comcast Cable Communications, LLC
+66012160 DoD Network Information Center
+```
+use `-a` to also display their ASNs:
+```
+$ python largest-networks.py -a db.csv 2
+106924288 No.31,Jin-rong Street 4134
+81752832 AT&T Services, Inc. 11712,5731,397958,397665,4466,4468,7018,397910,5728,797,397977,4465,397872,397762,13979,397757
+
+```
