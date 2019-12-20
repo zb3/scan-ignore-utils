@@ -4,7 +4,7 @@ from config import *
 #### ignore_patterns is only for ignore-networks.py
 ####
 
-ignore_patterns = gov_misc + uni_edu + nerns + cdns + misc
+ignore_patterns = gov_misc + uni_edu + nerns + cdns + corporate + misc
 ignore_pattern_groups = []
 
 ####
